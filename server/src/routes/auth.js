@@ -1,10 +1,8 @@
 import express, {json} from 'express';
 import jsonwebtoken from 'jsonwebtoken';
-import cors from 'cors';
 
 const router = express.Router();
 
-app.use(cors());
 
 const users = [
     { username: "admin", password: "admin" },
