@@ -1,4 +1,6 @@
 {
+  "main": "dist/index",
+  "types": "dist/index",
   "name": "client",
   "private": true,
   "version": "0.0.0",
@@ -11,11 +13,14 @@
   },
   "devDependencies": {
     "@sveltejs/vite-plugin-svelte": "^2.4.5",
-    "svelte": "^4.2.0",
-    "vite": "^4.4.9"
+    "@types/jsonwebtoken": "^9.0.4",
+    "svelte": "^4.2.0"
   },
   "dependencies": {
+    "jwt-decode": "^3.1.2",
+    "node": "^21.0.0",
     "nodemon": "^3.0.1",
-    "page": "^1.11.6"
+    "page": "^1.11.6",
+    "vite": "^4.5.0"
   }
 }

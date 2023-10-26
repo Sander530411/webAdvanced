@@ -1,18 +1,102 @@
-<!-- App.svelte -->
 <script>
+    import Filters from "../components/Filters.svelte";
+    import {products, query, webToken, user} from "../store.js";
+    import {get} from "svelte/store";
+    import {onDestroy, onMount} from "svelte";
+    import Product from "../components/Product.svelte";
+
+    function fetchData() {
+        fetch(`http://localhost:3000/products${get(query)}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'authorization': get(webToken)
+            }
+        })
+            .then(response => response.json())
+            .then(data => {
+                products.set(data);
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+            });
+    }
+
+    fetchData();
+
+    let interval;
+
+    onMount(() => {
+        interval = setInterval(fetchData, 5000);
+        return () => {
+            clearInterval(interval);
+        };
+    });
+
+    onDestroy(() => {
+        clearInterval(interval);
+    });
+
     export let params
 </script>
 
 <main>
-    <!-- Your main content goes here -->
-    <h1>Welcome to My Svelte App</h1>
-    <p>This is the main content of your application.</p>
+    <div class="filter-box">
+        <Filters url="http://localhost:3000/products"/>
+    </div>
+    <div class="products">
+
+        <h1>Welcome to My Svelte App</h1>
+        <p>This is the main content of your application.</p>
+
+        {#if $products.length === 0}
+            <p>Loading...</p>
+        {:else}
+            <div class="product-container">
+                {#each $products as product (product.ID)}
+                    <div class="product">
+                        <!--TODO make img work for product-->
+                        <Product
+                                title={product.title}
+                                imageSrc={product.img}
+                                description={product.description}
+                                clicked={() => {
+                                    alert('clicked' + product.title);
+                                }}/>
+                    </div>
+                {/each}
+            </div>
+        {/if}
+    </div>
 </main>
 
 <style>
     main {
-        max-width: 800px;
-        margin: 0 auto;
-        padding: 20px;
+        margin: 0;
+        padding: 10px;
+    }
+
+    .filter-box {
+        float: left;
+        margin-left: 0;
+        max-width: 13%;
+    }
+
+    .products {
+        float: right;
+    }
+
+    .product-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        margin-right: 40px;
+
+    }
+
+    .product {
+        width: calc(33.33% - 10px);
+        margin-bottom: 20px;
+        margin-top: 10px;
     }
 </style>

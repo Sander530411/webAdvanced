@@ -4,8 +4,8 @@ Place the credentials for at least two users in the table below. There should be
 
 
 | Username | Password | Account type |
-|----------|--------|------------|
-| `admin`  | | |
-| `user`   | | |
+|----------|----------|--------------|
+| `admin`  | admin    | admin        |
+| `user`   | user     | user         |
 
 

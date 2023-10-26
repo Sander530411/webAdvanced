@@ -8,6 +8,7 @@
   import About from "./pages/About.svelte";
   import Login from "./pages/Login.svelte";
   import Header from "./components/Header.svelte";
+  import Admin from "./pages/Admin.svelte";
 
   let page;
   let params;
@@ -25,14 +26,18 @@
     page = Login;
     currentRoute = ctx.pathname;
   });
+  router('/admin', (ctx) => {
+    page = Admin;
+    currentRoute = ctx.pathname;
+  });
 
   router.start();
+
 </script>
 
 <main>
-  <img src={logo} alt="Svelte Logo" />
   <Header active={currentRoute} />
-  <svelte:component this={page} {params} />
+  <svelte:component this={page} {params}/>
 </main>
 
 <style>
@@ -45,11 +50,6 @@
     text-align: center;
     padding: 1em;
     margin: 0 auto;
-  }
-
-  img {
-    height: 16rem;
-    width: 16rem;
   }
 
 </style>
