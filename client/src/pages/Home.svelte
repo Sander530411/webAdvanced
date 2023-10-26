@@ -49,6 +49,8 @@
         <h1>Welcome to My Svelte App</h1>
         <p>This is the main content of your application.</p>
 
+        {console.log($products)}
+
         {#if $products.length === 0}
             <p>Loading...</p>
         {:else}

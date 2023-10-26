@@ -12,12 +12,6 @@
         router.redirect("/");
     }
 
-    let prev = {
-        name: "",
-        Description: "",
-        img: ""
-    };
-
     export let params;
 </script>
 

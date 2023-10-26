@@ -1,27 +1,23 @@
 <script>
     import {products, query, webToken} from "../store.js";
-    import {get} from "svelte/store";
 
     let data = {
-        name: "",
+        title: "",
         description: "",
-        image: null
+        img: null
     };
 
     async function submit(event) {
         event.preventDefault();
-        console.log(data);
         fetch("http://localhost:3000/products", {
             method: 'POST',
             headers: {
-                'Authorization': $webToken},
-            body: JSON.stringify(data)
+                'Authorization': $webToken,
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data),
         })
-            .then((res) => res.json())
-            .then((data) => {
-                products.set(data);
-                console.log(data);
-            });
+            .then((res) => res.json());
     }
 
     function handleFileChange(event) {
@@ -30,12 +26,12 @@
             const reader = new FileReader();
 
             reader.onload = () => {
-                data.image = reader.result;
+                data.img = reader.result;
             };
 
             reader.readAsDataURL(file);
         } else {
-            data.image = null;
+            data.img = null;
         }
     }
 </script>
@@ -46,7 +42,7 @@
         <p>Fill out all the data to add a new product</p>
         <br>
         <label for="name">Name</label>
-        <input type="text" id="name" name="name" bind:value={data.name} required>
+        <input type="text" id="name" name="name" bind:value={data.title} required>
 
         <label for="description">Description</label>
         <textarea id="description" name="description" bind:value={data.description} required></textarea>

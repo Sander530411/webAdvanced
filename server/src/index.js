@@ -16,7 +16,7 @@ import auth, {verifyTokenType} from "./routes/auth.js";
 
 const port = 3000
 
-app.use(express.json());
+app.use(express.json({limit: '10mb'}));
 app.use(cors());
 
 app.use("/auth", auth);
@@ -42,7 +42,7 @@ app.get("/products", (req, res) => {
 app.get("/products/:productID", (req, res) => {
     // get product with id
     let productID = req.params.productID;
-    res.status(200).send(JSON.stringify(products[productID]));
+    res.status(200).send(JSON.stringify(products.find((p) => p.ID.toString() === productID.toString())));
 })
 
 app.post("/products", (req, res) => {
@@ -55,7 +55,6 @@ app.post("/products", (req, res) => {
                 try {
                     let product = req.body;
                     product.ID = products.length + 1;
-                    console.log(product.img);
                     products.push(product);
                     res.status(200).send(JSON.stringify(product));
                 } catch (e) {
