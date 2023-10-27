@@ -9,10 +9,10 @@ let products = [
 // API part
 
 import express from 'express';
-
-const app = express()
 import cors from 'cors';
 import auth, {verifyTokenType} from "./routes/auth.js";
+
+const app = express()
 
 const port = 3000
 
@@ -35,8 +35,38 @@ app.get("/products", (req, res) => {
     let minPrice = req.query.minPrice;
     let maxPrice = req.query.maxPrice;
 
+    let findLowest = obj => {
+        return Object.keys(obj).reduce((acc, val) => {
+            return Math.min(acc, obj[val]);
+        }, Infinity);
+    }
+
+    let findHighest = obj => {
+        return Object.keys(obj).reduce((acc, val) => {
+            return Math.max(acc, obj[val]);
+        }, -Infinity);
+    }
+
+    // filter products
+    let filteredProducts = products.filter((p) => {
+        if (title && !p.title.includes(title)) {
+            return false;
+        }
+        if (description && !p.description.includes(description)) {
+            return false;
+        }
+        if (minPrice && findLowest(p.bids) <= minPrice-1) {
+            return false;
+        }
+        console.log(findHighest(p.bids));
+        if (maxPrice && maxPrice <= findHighest(p.bids)-1) {
+            return false;
+        }
+        return true;
+    });
+
     // get all products
-    res.status(200).send(JSON.stringify(products));
+    res.status(200).send(JSON.stringify(filteredProducts));
 })
 
 app.get("/products/:productID", (req, res) => {

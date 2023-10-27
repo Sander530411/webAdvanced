@@ -4,6 +4,7 @@
 
     let filters = {
         name: "",
+        description: "",
         minPrice: "",
         maxPrice: "",
     };
@@ -19,9 +20,11 @@
             }
         }
 
-        query.set(newQuery.toString());
+        console.log(newQuery.toString());
 
-        fetch(`${url}?${query}`, {
+        query.set("?" + newQuery.toString());
+
+        fetch(url + $query, {
             method: 'GET',
             headers: {
                 'Authorization': get(webToken)}
@@ -40,10 +43,13 @@
         <label for="name">Name:</label>
         <input type="text" id="name" bind:value={filters.name} />
 
-        <label for="min-price">Min price:</label>
+        <label for="description">Description:</label>
+        <input type="text" id="description" bind:value={filters.description} />
+
+        <label for="min-price">Min bid:</label>
         <input type="number" id="min-price" bind:value={filters.minPrice} min="0"/>
 
-        <label for="max-price">Max price:</label>
+        <label for="max-price">Max bid:</label>
         <input type="number" id="max-price" bind:value={filters.maxPrice} min="1"/>
 
         <button type="button" on:click={generateQuery}>Search</button>
