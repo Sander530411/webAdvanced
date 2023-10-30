@@ -105,7 +105,7 @@ Authorization: {{token}}
   "name": "title1",
   "description": "description1",
   "img": null,
-  "expDate": 41856318563185
+  "expDate": 1709299200
 }
 
 > {%
