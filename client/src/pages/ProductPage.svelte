@@ -15,7 +15,8 @@
     let interval;
     let bidAmount = 0;
 
-    function bid(event) {
+    async function bid(event) {
+        event.preventDefault();
         if (product.expDate < Date.now() / 1000) {
             alert("This product has expired");
         } else if (product.bids.length > 0 && bidAmount <= Math.max(...product.bids.map(bid => Object.values(bid)[0]))) {
@@ -29,7 +30,7 @@
                 alert("Admins are not allowed to bid");
             } else {
                 event.preventDefault();
-                fetch(`http://localhost:3000/products/${ID}/bid`, {
+                await fetch(`http://localhost:3000/products/${ID}/bid`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json',
