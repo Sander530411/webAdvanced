@@ -57,14 +57,24 @@
                 {#each $products as product (product.ID)}
                     <div class="product">
                         <!--TODO make img work for product-->
-                        <Product
-                                title={product.title}
-                                imageSrc={product.img}
-                                description={product.description}
-                                maxPrice={Math.max(...Object.values(product.bids))}
-                                clicked={() => {
+                        {#if product.bids.length > 0}
+                            <Product
+                                    title={product.title}
+                                    imageSrc={product.img}
+                                    description={product.description}
+                                    maxPrice={Math.max(...product.bids.map(bid => Object.values(bid)[0]))}
+                                    clicked={() => {
                                     router(`/product/${product.ID}`)
                                 }}/>
+                        {:else}
+                            <Product
+                                    title={product.title}
+                                    imageSrc={product.img}
+                                    description={product.description}
+                                    clicked={() => {
+                                    router(`/product/${product.ID}`)
+                                }}/>
+                        {/if}
                     </div>
                 {/each}
             </div>

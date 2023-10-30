@@ -15,10 +15,9 @@ export function verifyTokenType(token, type) {
         // verify token
         jsonwebtoken.verify(token, secretKey, (err, decoded) => {
             if (err) {
-                console.log(err);
+                console.error(err);
                 resolve(false); // Token is invalid
             } else {
-                console.log(decoded);
                 if (decoded.type === type) {
                     resolve(true); // Token is valid and matches the specified type
                 } else {
@@ -36,7 +35,6 @@ router.post("/", async (req, res) => {
         (u) =>
             u.username === credentials.username && u.password === credentials.password
     );
-    console.log(user);
     if (user) {
         // return web token
 

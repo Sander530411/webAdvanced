@@ -1,20 +1,19 @@
 // Code part
 
 import jsonwebtoken from "jsonwebtoken";
+import express from 'express';
+import cors from 'cors';
+import auth, {verifyTokenType} from "./routes/auth.js";
 
 let products = [
-    {ID: 1, title: "title1", description: "description1", img: "../src/assets/svelte.png", bids: {user1: 100, user2: 200}},
-    {ID: 2, title: "title2", description: "description2", img: "../src/assets/svelte.png", bids: {user1: 100, user2: 200}},
-    {ID: 3, title: "title3", description: "description3", img: "../src/assets/svelte.png", bids: {user1: 100, user2: 200}},
+    {ID: 1, title: "title1", description: "description1", img: "../src/assets/svelte.png", bids: [{user1: 100}, {user2: 200}]},
+    {ID: 2, title: "title2", description: "description2", img: "../src/assets/svelte.png", bids: [{user1: 100}, {user2: 200}]},
+    {ID: 3, title: "title3", description: "description3", img: "../src/assets/svelte.png", bids: [{user1: 100}, {user2: 200}]},
 ];
 
 const secretKey = "secret-key-no-one-is-gonna-guess";
 
 // API part
-
-import express from 'express';
-import cors from 'cors';
-import auth, {verifyTokenType} from "./routes/auth.js";
 
 const app = express()
 
@@ -27,7 +26,6 @@ app.use("/auth", auth);
 
 // default
 app.get('/', (req, res) => {
-    console.log(req);
     res.status(200).send("hello world");
 })
 
@@ -39,17 +37,19 @@ app.get("/products", (req, res) => {
     let minPrice = req.query.minPrice;
     let maxPrice = req.query.maxPrice;
 
-    let findLowest = obj => {
-        return Object.keys(obj).reduce((acc, val) => {
-            return Math.min(acc, obj[val]);
-        }, Infinity);
+    // find the highest bid
+    function findHighest(product) {
+        let highest = 0;
+        console.log(product.bids);
+        for (let i = 0; i < product.bids.length; i++) {
+            if (Object.values(product.bids[i])[0] > highest) {
+                highest = Object.values(product.bids[i])[0];
+            }
+        }
+        return highest;
     }
 
-    let findHighest = obj => {
-        return Object.keys(obj).reduce((acc, val) => {
-            return Math.max(acc, obj[val]);
-        }, -Infinity);
-    }
+
 
     // filter products
     let filteredProducts = products.filter((p) => {
@@ -59,10 +59,10 @@ app.get("/products", (req, res) => {
         if (description && !p.description.includes(description)) {
             return false;
         }
-        if (minPrice && findHighest(p.bids) <= minPrice-1) {
+        if (minPrice && findHighest(p) <= minPrice-1) {
             return false;
         }
-        if (maxPrice && maxPrice <= findHighest(p.bids)-1) {
+        if (maxPrice && maxPrice <= findHighest(p)-1) {
             return false;
         }
         return true;
@@ -88,7 +88,7 @@ app.post("/products", (req, res) => {
                 try {
                     let product = req.body;
                     product.ID = products.length + 1;
-                    product.bids = {};
+                    product.bids = [];
                     products.push(product);
                     res.status(200).send(JSON.stringify(product));
                 } catch (e) {
@@ -115,7 +115,8 @@ app.put("/products/:productID/bid", (req, res) => {
                     let bid = req.body.bid;
                     let user = jsonwebtoken.decode(req.headers.authorization, secretKey).username;
                     let product = products.find((p) => p.ID.toString() === productID.toString());
-                    product.bids.user = bid;
+                    product.bids.push({[user]: bid});
+                    product.bids.sort((a, b) => Object.values(b)[0] - Object.values(a)[0]);
                     res.status(200).send(JSON.stringify(bid));
                 } catch (e) {
                     res.status(500).send("Internal server error");

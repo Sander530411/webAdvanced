@@ -12,7 +12,6 @@
     const urlSplit = url.split("/");
     const ID = urlSplit[urlSplit.length - 1];
     let product = {};
-    const bids = [];
     let interval;
     let bidAmount = 0;
 
@@ -53,9 +52,6 @@
         } else {
             product = await response.json();
         }
-        for (const user in product.bids) {
-            bids.push({user, amount: product.bids[user]});
-        }
     }
 
     fetchData();
@@ -91,9 +87,9 @@
         </form>
 
             <ul>
-                {#if product.bids}
-                    {#each Object.entries(product.bids) as [user, amount]}
-                        <li>{user}: {amount}</li>
+                {#if product.bids && product.bids.length > 0}
+                    {#each product.bids as bid}
+                        <li>{Object.keys(bid)}: ${Object.values(bid)}</li>
                     {/each}
                 {:else}
                     <p>No bids available</p>
