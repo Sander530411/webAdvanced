@@ -1,10 +1,103 @@
-GET {{host}}:{{port}}
+###
+### Test if the server is up and running
+###
+GET {{protocol}}{{host}}:{{port}}
 
 > {%
-client.test(
-    "Request executed successfully",
-    function() {
-        client.assert(response.status === 200, "Response status is not 200");
-    }
-);
+    client.test(
+        "GET /",
+        function () {
+            client.assert(response.status === 200, "response code was not 200");
+        }
+    );
+%}
+
+###
+### retrieve all products
+###
+GET {{protocol}}{{host}}:{{port}}/products
+
+> {%
+    client.test(
+        "GET /products",
+        function () {
+            client.assert(response.status === 200, "response code was not 200");
+            client.assert(response.body.length > 0, "response body was empty");
+        }
+    );
+%}
+
+###
+### retrieve a single product filtered by name
+###
+GET {{protocol}}{{host}}:{{port}}/products?name=title1
+
+> {%
+    client.test(
+        "GET /products?name=title1",
+        function () {
+            client.assert(response.status === 200, "response code was not 200");
+            client.assert(response.body[0].length === 1, "response body was not correct");
+        }
+    );
+%}
+
+###
+### retrieve a single product filtered by id
+###
+GET {{protocol}}{{host}}:{{port}}/products/1
+
+> {%
+    client.test(
+        "GET /products/1",
+        function () {
+            client.assert(response.status === 200, "response code was not 200");
+            client.assert(response.body[0].length === 1, "response body was not correct");
+        }
+    );
+%}
+
+###
+### make new product unauthorized
+###
+POST {{protocol}}{{host}}:{{port}}/products
+
+{
+    "name": "title1",
+    "description": "description1",
+    "img": null,
+    "expDate" : new Date().toISOString(),
+}
+
+> {%
+    client.test(
+        "POST /products",
+        function () {
+            client.assert(response.status === 401, "response code was not 401");
+        }
+    );
+%}
+
+###
+### make new product authorized
+###
+
+POST {{protocol}}{{host}}:{{port}}/products
+content-type: application/json
+Authorization: Bearer "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwicGFzc3dvcmQiOiJhZG1pbiIsInR5cGUiOiJhZG1pbiIsImlhdCI6MTY5ODY3NjI5NCwiZXhwIjoxNjk4Njc5ODk0fQ.-g8SBg_TeGCfPwBG2m8Kis2zOvXRWZSqVXzO9pevc9A"
+
+{
+    "name": "title1",
+    "description": "description1",
+    "img": null,
+    "expDate" : 41856318563185
+}
+
+> {%
+    client.test(
+        "POST /products",
+        function () {
+            client.assert(response.status === 200, "response code was not 200");
+        }
+    );
 %}

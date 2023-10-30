@@ -6,19 +6,22 @@ Content-Type: application/json
 Accept: application/json
 
 {
-  "username": "user",
-  "password": "pass"
+  "username": "admin",
+  "password": "admin"
 }
 
 > {%
-client.global.set("token", "m1jnH3l3L4ng3en5uperV31l!geT0ken");
+    client.global.set("token", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwicGFzc3dvcmQiOiJhZG1pbiIsInR5cGUiOiJhZG1pbiIsImlhdCI6MTY5ODY3NjI5NCwiZXhwIjoxNjk4Njc5ODk0fQ.-g8SBg_TeGCfPwBG2m8Kis2zOvXRWZSqVXzO9pevc9A");
+    client.test(
+        "Status code is 200",
+        function () {
+            client.assert(response.status === 200, "Response status is not 200");
+        }
+    );
+    client.test(
+        "Response body is a token",
+        function () {
+            client.assert(response.body.token !== undefined, "Response body is not a token");
+        }
+    );
 %}
-
-
-###
-### Invalidate the token
-###
-DELETE {{protocol}}{{host}}:{{port}}/auth
-Content-Type: application/json
-Accept: application/json
-Authorization: Bearer {{token}}
