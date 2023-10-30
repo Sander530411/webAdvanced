@@ -1,15 +1,18 @@
 <script>
-    import {products, query, webToken} from "../store.js";
+    import {webToken} from "../store.js";
+
+    let date = new Date();
 
     let data = {
         title: "",
         description: "",
-        img: null
+        img: null,
+        expDate: Math.floor(date.getTime()/1000),
     };
 
     async function submit(event) {
         event.preventDefault();
-        const newItem = fetch("http://localhost:3000/products", {
+        fetch("http://localhost:3000/products", {
             method: 'POST',
             headers: {
                 'Authorization': $webToken,
@@ -23,6 +26,7 @@
                 data.title = "";
                 data.description = "";
                 data.img = null;
+                date = new Date();
             })
     }
 
@@ -52,6 +56,10 @@
 
         <label for="description">Description</label>
         <textarea id="description" name="description" bind:value={data.description} required></textarea>
+
+        <label for="expiration-date">Expiration date</label>
+        <input type="date" id="expiration-date" name="expiration-date" bind:value={date} required>
+
 
         <label for="product-image">Product image</label>
         <input type="file" name="product image" id="product-image" on:change={handleFileChange} accept="image/png, image/jpeg">

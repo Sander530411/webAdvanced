@@ -4,6 +4,7 @@
     export let minPrice = 0;
     export let maxPrice = 0;
     export let description;
+    export let date;
 
     export let clicked = () => {};
 
@@ -22,6 +23,8 @@
     <img src={imageSrc} alt={title} />
 
     <div class="price-range">
+        <span class="expireDate">expires on: {date}</span>
+        <br>
 <!--        <span class="min-price">Min Price: ${minPrice.toFixed(2)}</span>-->
         <span class="max-price">Price: ${maxPrice.toFixed(2)}</span>
     </div>
@@ -51,5 +54,10 @@
 
     img {
         width: 50%;
+    }
+
+    .expireDate {
+        font-size: 12px;
+        color: red;
     }
 </style>

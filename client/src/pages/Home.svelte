@@ -23,6 +23,14 @@
             });
     }
 
+    function formatExpDate(expDate) {
+        const date = new Date(expDate * 1000);
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        const day = date.getDate().toString().padStart(2, '0');
+        const year = date.getFullYear();
+        return `${day}-${month}-${year} ${date.getHours()}:${date.getMinutes()}`
+    }
+
     fetchData();
 
     let interval;
@@ -63,6 +71,7 @@
                                     imageSrc={product.img}
                                     description={product.description}
                                     maxPrice={Math.max(...product.bids.map(bid => Object.values(bid)[0]))}
+                                    date={formatExpDate(product.expDate)}
                                     clicked={() => {
                                     router(`/product/${product.ID}`)
                                 }}/>
@@ -71,6 +80,7 @@
                                     title={product.title}
                                     imageSrc={product.img}
                                     description={product.description}
+                                    date={formatExpDate(product.expDate)}
                                     clicked={() => {
                                     router(`/product/${product.ID}`)
                                 }}/>

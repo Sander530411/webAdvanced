@@ -6,9 +6,30 @@ import cors from 'cors';
 import auth, {verifyTokenType} from "./routes/auth.js";
 
 let products = [
-    {ID: 1, title: "title1", description: "description1", img: "../src/assets/svelte.png", bids: [{user1: 100}, {user2: 200}]},
-    {ID: 2, title: "title2", description: "description2", img: "../src/assets/svelte.png", bids: [{user1: 100}, {user2: 200}]},
-    {ID: 3, title: "title3", description: "description3", img: "../src/assets/svelte.png", bids: [{user1: 100}, {user2: 200}]},
+    {
+        ID: 1,
+        title: "title1",
+        description: "description1",
+        img: "../src/assets/svelte.png",
+        bids: [{user1: 100}, {user2: 200}],
+        expDate: "1709299200"
+    },
+    {
+        ID: 2,
+        title: "title2",
+        description: "description2",
+        img: "../src/assets/svelte.png",
+        bids: [{user1: 100}, {user2: 200}],
+        expDate: "1709299200"
+    },
+    {
+        ID: 3,
+        title: "title3",
+        description: "description3",
+        img: "../src/assets/svelte.png",
+        bids: [{user1: 100}, {user2: 200}],
+        expDate: "1709299200"
+    },
 ];
 
 const secretKey = "secret-key-no-one-is-gonna-guess";
@@ -49,8 +70,6 @@ app.get("/products", (req, res) => {
         return highest;
     }
 
-
-
     // filter products
     let filteredProducts = products.filter((p) => {
         if (title && !p.title.includes(title)) {
@@ -59,10 +78,10 @@ app.get("/products", (req, res) => {
         if (description && !p.description.includes(description)) {
             return false;
         }
-        if (minPrice && findHighest(p) <= minPrice-1) {
+        if (minPrice && findHighest(p) <= minPrice - 1) {
             return false;
         }
-        if (maxPrice && maxPrice <= findHighest(p)-1) {
+        if (maxPrice && maxPrice <= findHighest(p) - 1) {
             return false;
         }
         return true;
@@ -81,7 +100,7 @@ app.get("/products/:productID", (req, res) => {
 app.post("/products", (req, res) => {
     // add a new product
     // body: {title, description, img}
-    // return: {ID, title, description, img}
+    // return: {ID, title, description, img, bids, expDate}
     verifyTokenType(req.headers.authorization, 'admin')
         .then((isValid) => {
             if (isValid) {
@@ -142,6 +161,21 @@ app.put("/products/:productID", (req, res) => {
 
 app.delete("/products/:productID", (req, res) => {
     //delete product with id
+    // check if account is admin
+    verifyTokenType(req.headers.authorization, 'admin')
+        .then((isValid) => {
+            if (isValid) {
+                try {
+                    let productID = req.params.productID;
+                    products.splice(productID, 1);
+                    res.status(200).send("Product deleted");
+                } catch (e) {
+                    res.status(500).send("Internal server error");
+                }
+            } else {
+                res.status(401).send("Unauthorized");
+            }
+        });
 })
 
 
