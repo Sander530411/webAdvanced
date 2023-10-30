@@ -61,6 +61,7 @@
                                 title={product.title}
                                 imageSrc={product.img}
                                 description={product.description}
+                                maxPrice={Math.max(...Object.values(product.bids))}
                                 clicked={() => {
                                     router(`/product/${product.ID}`)
                                 }}/>

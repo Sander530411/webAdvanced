@@ -59,7 +59,7 @@ app.get("/products", (req, res) => {
         if (description && !p.description.includes(description)) {
             return false;
         }
-        if (minPrice && findLowest(p.bids) <= minPrice-1) {
+        if (minPrice && findHighest(p.bids) <= minPrice-1) {
             return false;
         }
         if (maxPrice && maxPrice <= findHighest(p.bids)-1) {

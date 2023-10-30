@@ -1,8 +1,8 @@
 <script>
     export let title;
     export let imageSrc = "../src/assets/svelte.png";
-    // export let minPrice = 0;
-    // export let maxPrice = 0;
+    export let minPrice = 0;
+    export let maxPrice = 0;
     export let description;
 
     export let clicked = () => {};
@@ -23,9 +23,8 @@
 
     <div class="price-range">
 <!--        <span class="min-price">Min Price: ${minPrice.toFixed(2)}</span>-->
-<!--        <span class="max-price">Max Price: ${maxPrice.toFixed(2)}</span>-->
+        <span class="max-price">Price: ${maxPrice.toFixed(2)}</span>
     </div>
-    <p>{description}</p>
 </div>
 
 <style>
