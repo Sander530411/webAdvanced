@@ -1,7 +1,7 @@
 ###
 ### Retrieve a token that can be used for calls requiring authentication
 ###
-GET {{protocol}}{{host}}:{{port}}/auth
+POST {{protocol}}{{host}}:{{port}}/auth/login
 Content-Type: application/json
 Accept: application/json
 
@@ -11,7 +11,6 @@ Accept: application/json
 }
 
 > {%
-    client.global.set("token", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwicGFzc3dvcmQiOiJhZG1pbiIsInR5cGUiOiJhZG1pbiIsImlhdCI6MTY5ODY3NjI5NCwiZXhwIjoxNjk4Njc5ODk0fQ.-g8SBg_TeGCfPwBG2m8Kis2zOvXRWZSqVXzO9pevc9A");
     client.test(
         "Status code is 200",
         function () {
@@ -22,6 +21,29 @@ Accept: application/json
         "Response body is a token",
         function () {
             client.assert(response.body.token !== undefined, "Response body is not a token");
+        }
+    );
+%}
+
+
+###
+### Register a new user
+###
+
+POST {{protocol}}{{host}}:{{port}}/auth/register
+Content-Type: application/json
+Accept: application/json
+
+{
+  "username": "test",
+  "password": "test"
+}
+
+> {%
+    client.test(
+        "Status code is 201",
+        function () {
+            client.assert(response.status === 201, "Response status is not 201");
         }
     );
 %}

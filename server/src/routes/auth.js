@@ -62,7 +62,7 @@ router.post("/register", async (req, res) => {
 
         users.push({ username: credentials.username, password: hashedPassword, type: "user" });
 
-        res.status(200).send("User created");
+        res.status(201).send("User created");
     }
 });
 

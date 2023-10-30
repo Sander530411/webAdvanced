@@ -109,7 +109,7 @@ app.post("/products", (req, res) => {
                     product.ID = products.length + 1;
                     product.bids = [];
                     products.push(product);
-                    res.status(200).send(JSON.stringify(product));
+                    res.status(201).send(JSON.stringify(product));
                 } catch (e) {
                     res.status(500).send("Internal server error");
                 }

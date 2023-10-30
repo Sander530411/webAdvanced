@@ -1,7 +1,7 @@
 ###
 ### get token
 ###
-GET {{protocol}}{{host}}:{{port}}/auth
+POST {{protocol}}{{host}}:{{port}}/auth/login
 content-type: application/json
 
 {
@@ -112,7 +112,7 @@ Authorization: {{token}}
     client.test(
         "POST /products",
         function () {
-            client.assert(response.status === 200, "response code was not 200");
+            client.assert(response.status === 201, "response code was not 201");
         }
     );
 %}
