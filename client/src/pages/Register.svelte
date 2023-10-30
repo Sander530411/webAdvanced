@@ -1,17 +1,18 @@
 <script>
-
-    import {webToken, user, accountType} from "../store.js";
-    import jwtDecode from "jwt-decode";
-    import {get} from "svelte/store";
     import router from "page";
 
     let username = "";
     let password = "";
+    let passwordRepeat = "";
 
     async function handleSubmit(event) {
         event.preventDefault();
+        if (password !== passwordRepeat) {
+            alert("Passwords do not match.");
+            return;
+        }
         try {
-            const response = await fetch("http://localhost:3000/auth/login", {
+            const response = await fetch("http://localhost:3000/auth/register", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -20,21 +21,10 @@
             });
 
             if (response.ok) {
-                // successful authentication
-                let token = await response.json();
-
-                webToken.set(token.token);
-                console.log(jwtDecode(token.token));
-                let decode = jwtDecode(token.token);
-                user.set(decode["username"]);
-                accountType.set(decode["type"]);
-                if (get(accountType) === "admin")
-                    router.redirect("/admin");
-                else
-                    router.redirect("/");
-            } else {
-                // Authentication failed
-                alert("Login failed. Please check your credentials.");
+                alert("Account created successfully.");
+                router("/home")
+            } else if (response.status === 409) {
+                alert("Username already exists.");
             }
         } catch (error) {
             console.error("An error occurred:", error);
@@ -52,6 +42,9 @@
 
         <label for="password">Password:</label>
         <input type="password" id="password" bind:value={password} required/>
+
+        <label for="passwordRepeat">Repeat Password: </label>
+        <input type="password" id="passwordRepeat" bind:value={passwordRepeat} required/>
 
         <button type="submit">Log In</button>
     </form>

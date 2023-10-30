@@ -17,6 +17,7 @@
     <ul>
         <li><a class:active={active === "/"} href="/">Home</a></li>
         <li><a class:active={active === "/about"} href="/about">About</a></li>
+        <li><a class:active={active === "/register"} href="/register">Register</a></li>
         {#if $accountType === "admin"}
             <li><a class:active={active === "/admin"} href="/admin">Admin</a></li>
         {/if}

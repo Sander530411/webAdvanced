@@ -1,7 +1,7 @@
 ###
 ### get token
 ###
-POST {{protocol}}{{host}}:{{port}}/auth
+GET {{protocol}}{{host}}:{{port}}/auth
 content-type: application/json
 
 {
