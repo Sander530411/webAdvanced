@@ -9,6 +9,7 @@
   import Login from "./pages/Login.svelte";
   import Header from "./components/Header.svelte";
   import Admin from "./pages/Admin.svelte";
+  import Product from "./pages/ProductPage.svelte";
 
   let page;
   let params;
@@ -28,6 +29,10 @@
   });
   router('/admin', (ctx) => {
     page = Admin;
+    currentRoute = ctx.pathname;
+  });
+  router('/product/:id', (ctx) => {
+    page = Product;
     currentRoute = ctx.pathname;
   });
 

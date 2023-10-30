@@ -4,6 +4,7 @@
     import {get} from "svelte/store";
     import {onDestroy, onMount} from "svelte";
     import Product from "../components/Product.svelte";
+    import router from "page";
 
     function fetchData() {
         fetch(`http://localhost:3000/products${get(query)}`, {
@@ -46,10 +47,8 @@
     </div>
     <div class="products">
 
-        <h1>Welcome to My Svelte App</h1>
-        <p>This is the main content of your application.</p>
-
-        {console.log($products)}
+        <h1>Welcome to the svelte store</h1>
+        <p>these are the products that are currently for sale for sale</p>
 
         {#if $products.length === 0}
             <p>Loading...</p>
@@ -63,7 +62,7 @@
                                 imageSrc={product.img}
                                 description={product.description}
                                 clicked={() => {
-                                    alert('clicked' + product.title);
+                                    router(`/product/${product.ID}`)
                                 }}/>
                     </div>
                 {/each}
@@ -93,7 +92,6 @@
         flex-wrap: wrap;
         justify-content: space-between;
         margin-right: 40px;
-
     }
 
     .product {

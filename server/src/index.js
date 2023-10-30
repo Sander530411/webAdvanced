@@ -1,10 +1,14 @@
 // Code part
 
+import jsonwebtoken from "jsonwebtoken";
+
 let products = [
     {ID: 1, title: "title1", description: "description1", img: "../src/assets/svelte.png", bids: {user1: 100, user2: 200}},
     {ID: 2, title: "title2", description: "description2", img: "../src/assets/svelte.png", bids: {user1: 100, user2: 200}},
     {ID: 3, title: "title3", description: "description3", img: "../src/assets/svelte.png", bids: {user1: 100, user2: 200}},
 ];
+
+const secretKey = "secret-key-no-one-is-gonna-guess";
 
 // API part
 
@@ -58,7 +62,6 @@ app.get("/products", (req, res) => {
         if (minPrice && findLowest(p.bids) <= minPrice-1) {
             return false;
         }
-        console.log(findHighest(p.bids));
         if (maxPrice && maxPrice <= findHighest(p.bids)-1) {
             return false;
         }
@@ -85,8 +88,35 @@ app.post("/products", (req, res) => {
                 try {
                     let product = req.body;
                     product.ID = products.length + 1;
+                    product.bids = {};
                     products.push(product);
                     res.status(200).send(JSON.stringify(product));
+                } catch (e) {
+                    res.status(500).send("Internal server error");
+                }
+            } else {
+                res.status(401).send("Unauthorized");
+            }
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+})
+
+app.put("/products/:productID/bid", (req, res) => {
+    // bid on product with id
+    // body: {bid}
+    // return: {ID, title, description, img}
+    verifyTokenType(req.headers.authorization, 'user')
+        .then((isValid) => {
+            if (isValid) {
+                try {
+                    let productID = req.params.productID;
+                    let bid = req.body.bid;
+                    let user = jsonwebtoken.decode(req.headers.authorization, secretKey).username;
+                    let product = products.find((p) => p.ID.toString() === productID.toString());
+                    product.bids.user = bid;
+                    res.status(200).send(JSON.stringify(bid));
                 } catch (e) {
                     res.status(500).send("Internal server error");
                 }

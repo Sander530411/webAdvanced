@@ -9,7 +9,7 @@
 
     async function submit(event) {
         event.preventDefault();
-        fetch("http://localhost:3000/products", {
+        const newItem = fetch("http://localhost:3000/products", {
             method: 'POST',
             headers: {
                 'Authorization': $webToken,
@@ -17,7 +17,13 @@
             },
             body: JSON.stringify(data),
         })
-            .then((res) => res.json());
+            .then((res) => {
+                res.json();
+                alert("Product added");
+                data.title = "";
+                data.description = "";
+                data.img = null;
+            })
     }
 
     function handleFileChange(event) {

@@ -23,17 +23,22 @@
         console.log(newQuery.toString());
 
         query.set("?" + newQuery.toString());
-
-        fetch(url + $query, {
-            method: 'GET',
-            headers: {
-                'Authorization': get(webToken)}
-        })
-            .then((res) => res.json())
-            .then((data) => {
-                products.set(data);
-                console.log(data);
-            });
+        try {
+            fetch(url + $query, {
+                method: 'GET',
+                headers: {
+                    'Authorization': get(webToken)
+                }
+            })
+                .then((res) => res.json())
+                .then((data) => {
+                    products.set(data);
+                    console.log(data);
+                });
+            
+        } catch (e) {
+            alert("An error occurred, please try again later");
+        }
     }
 </script>
 
