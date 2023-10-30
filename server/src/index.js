@@ -149,16 +149,6 @@ app.put("/products/:productID/bid", (req, res) => {
         });
 })
 
-app.put("/products/:productID", (req, res) => {
-    // update product with id
-    // body: {title, description}
-    // return: {ID, title, description}
-    let product = req.body;
-    let productID = req.params.productID;
-    products[productID] = product;
-    res.status(200).send(JSON.stringify(product));
-})
-
 app.delete("/products/:productID", (req, res) => {
     //delete product with id
     // check if account is admin

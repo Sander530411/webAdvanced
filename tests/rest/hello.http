@@ -1,4 +1,19 @@
 ###
+### get token
+###
+POST {{protocol}}{{host}}:{{port}}/auth
+content-type: application/json
+
+{
+  "username": "admin",
+  "password": "admin"
+}
+
+> {%
+    client.global.set("token", response.body.token);
+%}
+
+###
 ### Test if the server is up and running
 ###
 GET {{protocol}}{{host}}:{{port}}
@@ -84,18 +99,34 @@ POST {{protocol}}{{host}}:{{port}}/products
 
 POST {{protocol}}{{host}}:{{port}}/products
 content-type: application/json
-Authorization: Bearer "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6ImFkbWluIiwicGFzc3dvcmQiOiJhZG1pbiIsInR5cGUiOiJhZG1pbiIsImlhdCI6MTY5ODY3NjI5NCwiZXhwIjoxNjk4Njc5ODk0fQ.-g8SBg_TeGCfPwBG2m8Kis2zOvXRWZSqVXzO9pevc9A"
+Authorization: {{token}}
 
 {
-    "name": "title1",
-    "description": "description1",
-    "img": null,
-    "expDate" : 41856318563185
+  "name": "title1",
+  "description": "description1",
+  "img": null,
+  "expDate": 41856318563185
 }
 
 > {%
     client.test(
         "POST /products",
+        function () {
+            client.assert(response.status === 200, "response code was not 200");
+        }
+    );
+%}
+
+###
+### update product unauthorized
+###
+DELETE {{protocol}}{{host}}:{{port}}/products/1
+content-type: application/json
+Authorization: {{token}}
+
+> {%
+    client.test(
+        "DELETE /products/1",
         function () {
             client.assert(response.status === 200, "response code was not 200");
         }
