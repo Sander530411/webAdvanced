@@ -157,7 +157,7 @@ app.delete("/products/:productID", (req, res) => {
             if (isValid) {
                 try {
                     let productID = req.params.productID;
-                    products.splice(productID, 1);
+                    products = products.filter((p) => p.ID.toString() !== productID.toString());
                     res.status(200).send("Product deleted");
                 } catch (e) {
                     res.status(500).send("Internal server error");

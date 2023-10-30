@@ -59,12 +59,11 @@
         <p>these are the products that are currently for sale for sale</p>
 
         {#if $products.length === 0}
-            <p>Loading...</p>
+            <p>No products were found</p>
         {:else}
             <div class="product-container">
                 {#each $products as product (product.ID)}
                     <div class="product">
-                        <!--TODO make img work for product-->
                         {#if product.bids.length > 0}
                             <Product
                                     title={product.title}

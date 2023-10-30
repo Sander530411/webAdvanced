@@ -1,14 +1,17 @@
 <script>
     import {webToken} from "../store.js";
 
-    let date = new Date();
-
     let data = {
         title: "",
         description: "",
         img: null,
-        expDate: Math.floor(date.getTime()/1000),
+        expDate: null,
     };
+
+    function handleDateChange(event) {
+        const selectedDate = new Date(event.target.value);
+        data.expDate = Math.floor(selectedDate.getTime() / 1000);
+    }
 
     async function submit(event) {
         event.preventDefault();
@@ -26,7 +29,6 @@
                 data.title = "";
                 data.description = "";
                 data.img = null;
-                date = new Date();
             })
     }
 
@@ -58,12 +60,12 @@
         <textarea id="description" name="description" bind:value={data.description} required></textarea>
 
         <label for="expiration-date">Expiration date</label>
-        <input type="date" id="expiration-date" name="expiration-date" bind:value={date} required>
+        <input type="date" id="expiration-date" name="expiration-date" on:change={handleDateChange} required>
 
 
         <label for="product-image">Product image</label>
         <input type="file" name="product image" id="product-image" on:change={handleFileChange} accept="image/png, image/jpeg">
-        <img id="image-preview" alt="Preview" src={data.image}>
+        <img id="image-preview" alt="Preview" src={data.img}>
 
         <button type="submit">Add product</button>
     </form>
