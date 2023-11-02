@@ -122,6 +122,36 @@ app.post("/products", (req, res) => {
         });
 })
 
+app.put("/products/:productID", (req, res) => {
+    // update product with id
+    // body: {title, description, img}
+    // return: {ID, title, description, img, bids, expDate}
+    verifyTokenType(req.headers.authorization, 'admin')
+        .then((isValid) => {
+            if (isValid) {
+                try {
+                    let productID = req.params.productID;
+                    let product = req.body;
+                    product.ID = productID;
+                    let index = products.findIndex((p) => p.ID.toString() === productID.toString());
+                    product.bids = products[index].bids;
+                    if (!product.bids) {
+                        product.bids = products[index].bids;
+                    }
+                    products[index] = product;
+                    res.status(200).send(JSON.stringify(product));
+                } catch (e) {
+                    res.status(500).send("Internal server error");
+                }
+            } else {
+                res.status(401).send("Unauthorized");
+            }
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+})
+
 app.put("/products/:productID/bid", (req, res) => {
     // bid on product with id
     // body: {bid}

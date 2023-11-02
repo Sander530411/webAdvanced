@@ -3,6 +3,7 @@
     import {get} from "svelte/store";
     import router from "page";
     import NewProduct from "../components/NewProduct.svelte";
+  import EditProduct from "../components/EditProduct.svelte";
 
     if ($accountType === "") {
         alert("You are not logged in. You will be redirected to the login page.");
@@ -20,6 +21,9 @@
     <div class="newProduct">
         <NewProduct/>
     </div>
+    <div class="editProduct">
+        <EditProduct/>
+    </div>
 </main>
 
 <style>
@@ -32,5 +36,12 @@
         float: left;
         margin-left: 0;
         max-width: 13%;
+    }
+
+    .editProduct {
+        float: right;
+        margin-left: 0;
+        max-width: 13%;
+        margin-right: 15%;
     }
 </style>

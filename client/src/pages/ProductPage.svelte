@@ -115,7 +115,7 @@
 
         <form on:submit={bid}>
             <label for="bid">Bid</label>
-            <input type="number" id="bid" name="bid" min="0" step="0.01" bind:value={bidAmount} required>
+            <input type="number" id="bid" name="bid" min="0" step="1" bind:value={bidAmount} required>
             <button type="submit">Bid</button>
         </form>
         <br>

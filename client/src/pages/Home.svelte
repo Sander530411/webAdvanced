@@ -56,7 +56,7 @@
     <div class="products">
 
         <h1>Welcome to the svelte store</h1>
-        <p>these are the products that are currently for sale for sale</p>
+        <p>These are the products that are currently for sale.</p>
 
         {#if $products.length === 0}
             <p>No products were found</p>
