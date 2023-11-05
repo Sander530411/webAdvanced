@@ -1,7 +1,8 @@
 <script>
     import router from "page";
-    import { accountType, user } from '../store.js';
-    
+    import {accountType, user, webToken} from '../store.js';
+    import {get} from "svelte/store";
+
     if ($accountType === "") {
         alert("You are not logged in. You will be redirected to the login page.");
         router.redirect("/login");
@@ -11,30 +12,36 @@
     }
 
     // fetch all bids made by the user
-    let bids = [];
-    fetch("http://localhost:3000/bids")
-        .then(res => res.json())
-        .then(data => {
-            data.forEach(bid => {
-                if (bid === $user) {
-                    bids.push(bid);
-                }
-            });
-        })
-        .catch(err => console.log(err));
 
+    let bids = [];
+    async function fetchData() {
+        const response = await fetch(`http://localhost:3000/users/${$user}/bids`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'authorization': get(webToken)
+            }
+        });
+        if (response.ok) {
+            bids = await response.json();
+            console.log(bids);
+        } else {
+            console.error("HTTP-Error: " + response.status);
+        }
+    }
+    fetchData();
+
+    export let params;
 </script>
 
 <main>
     <h1>hello {$user}</h1>
-    <!-- list of all bids the user has made on products imported from the fetch at localhost:3000/products -->
     <h2>My Bids</h2>
     <ul>
         {#each bids as bid}
-            <li>
-                <p>Product: {bid.product}</p>
-                <p>Amount: {bid.amount}</p>
-                <p>Time: {bid.time}</p>
+            <li on:click={router.redirect(`/product/${bid.ID}`)}>
+                <p>title: {bid.title}</p>
+                <p>bid: {bid.bid}</p>
             </li>
         {/each}
     </ul>
@@ -42,5 +49,25 @@
 </main>
 
 <style>
+    main {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+
+    ul {
+        list-style-type: none;
+    }
+
+    li {
+        margin: 1rem;
+        padding: 1rem;
+        border: 1px solid black;
+    }
+
+    li:hover {
+        border-color: #999;
+    }
 
 </style>

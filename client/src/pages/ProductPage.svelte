@@ -37,8 +37,13 @@
                         'authorization': get(webToken)
                     },
                     body: JSON.stringify({bid: bidAmount})
+                }).then(response => {
+                    if (!response.ok) {
+                        console.log("error", response.status);
+                        alert("Could not place bid, try again later");
+                    }
                 });
-                fetchData();
+                await fetchData();
                 alert("Bid placed");
             }
         }

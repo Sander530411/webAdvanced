@@ -48,10 +48,6 @@
         margin-top: 10px;
     }
 
-    .min-price, .max-price {
-        font-weight: bold;
-    }
-
     img {
         width: 50%;
     }
