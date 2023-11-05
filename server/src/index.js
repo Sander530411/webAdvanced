@@ -154,17 +154,24 @@ app.put("/products/:productID", (req, res) => {
 
 app.get("/users/:username/bids", (req, res) => {
     // get all bids of user with username
-    let username = req.params.username;
-    let userBids = [];
-    products.forEach((p) => {
-        p.bids.forEach((b) => {
-            if (Object.keys(b)[0] === username) {
-                userBids.push({ID: p.ID, title: p.title, description: p.description, img: p.img, bid: Object.values(b)[0]});
-                console.log(userBids);
-            }
-        })
-    })
-    res.status(200).send(JSON.stringify(userBids));
+    jsonwebtoken.verify(req.headers.authorization, secretKey, (err, decoded) => {
+        if (err) {
+            console.error(err);
+            res.status(401).send("Unauthorized");
+        } else {
+            let username = req.params.username;
+            let userBids = [];
+            products.forEach((p) => {
+                p.bids.forEach((b) => {
+                    if (Object.keys(b)[0] === username) {
+                        userBids.push({ID: p.ID, title: p.title, description: p.description, img: p.img, bid: Object.values(b)[0]});
+                        console.log(userBids);
+                    }
+                })
+            })
+            res.status(200).send(JSON.stringify(userBids));
+        }
+    });
 })
 
 app.put("/products/:productID/bid", (req, res) => {
