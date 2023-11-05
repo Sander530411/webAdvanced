@@ -21,6 +21,9 @@
         {#if $accountType === "admin"}
             <li><a class:active={active === "/admin"} href="/admin">Admin</a></li>
         {/if}
+        {#if $accountType === "user"}
+            <li><a class:active={active === "/user"} href="/user">User</a></li>
+        {/if}
     </ul>
     <div class="user">
         <a href="/login">{userLoginText}</a>

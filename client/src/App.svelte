@@ -11,6 +11,7 @@
   import Admin from "./pages/Admin.svelte";
   import Product from "./pages/ProductPage.svelte";
   import Register from "./pages/Register.svelte";
+  import User from "./pages/User.svelte";
 
   let page;
   let params;
@@ -38,6 +39,10 @@
   });
   router('/register', (ctx) => {
     page = Register;
+    currentRoute = ctx.pathname;
+  });
+  router('/user', (ctx) => {
+    page = User;
     currentRoute = ctx.pathname;
   });
 
