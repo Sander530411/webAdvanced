@@ -129,8 +129,8 @@ app.put("/products/:productID", (req, res) => {
     verifyTokenType(req.headers.authorization, 'admin')
         .then((isValid) => {
             if (isValid) {
+                let productID = req.params.productID;
                 try {
-                    let productID = req.params.productID;
                     let product = req.body;
                     product.ID = productID;
                     let index = products.findIndex((p) => p.ID.toString() === productID.toString());

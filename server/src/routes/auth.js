@@ -12,6 +12,9 @@ const users = [
 const secretKey = "secret-key-no-one-is-gonna-guess";
 
 export function verifyTokenType(token, type) {
+    if (!token) {
+        return Promise.resolve(false); // Token is missing
+    }
     return new Promise((resolve, reject) => {
         // verify token
         jsonwebtoken.verify(token, secretKey, (err, decoded) => {

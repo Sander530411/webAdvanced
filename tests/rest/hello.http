@@ -45,11 +45,11 @@ GET {{protocol}}{{host}}:{{port}}/products
 ###
 ### retrieve a single product filtered by name
 ###
-GET {{protocol}}{{host}}:{{port}}/products?name=title1
+GET {{protocol}}{{host}}:{{port}}/products?name=title2
 
 > {%
     client.test(
-        "GET /products?name=title1",
+        "GET /products?name=title2",
         function () {
             client.assert(response.status === 200, "response code was not 200");
             client.assert(response.body[0].length === 1, "response body was not correct");
@@ -118,15 +118,92 @@ Authorization: {{token}}
 %}
 
 ###
-### update product unauthorized
+### delete product unauthorized
 ###
 DELETE {{protocol}}{{host}}:{{port}}/products/1
+content-type: application/json
+
+> {%
+    client.test(
+        "DELETE /products/4",
+        function () {
+            client.assert(response.status === 401, "response code was not 401");
+        }
+    );
+%}
+
+###
+### delete product authorized
+###
+DELETE {{protocol}}{{host}}:{{port}}/products/4
 content-type: application/json
 Authorization: {{token}}
 
 > {%
     client.test(
-        "DELETE /products/1",
+        "DELETE /products/4",
+        function () {
+            client.assert(response.status === 200, "response code was not 200");
+        }
+    );
+%}
+
+###
+### update product authorized
+###
+PUT {{protocol}}{{host}}:{{port}}/products/1
+content-type: application/json
+Authorization: {{token}}
+
+{
+  "name": "title1",
+  "description": "description1",
+  "img": null,
+  "expDate": 1709299200
+}
+
+> {%
+    client.test(
+        "PUT /products/1",
+        function () {
+            client.assert(response.status === 200, "response code was not 200");
+        }
+    );
+%}
+
+###
+### update product unauthorized
+###
+PUT {{protocol}}{{host}}:{{port}}/products/1
+content-type: application/json
+
+{
+  "name": "title1",
+  "description": "description1",
+  "img": null,
+  "expDate": 1709299200
+}
+
+> {%
+    client.test(
+        "PUT /products/1",
+        function () {
+            client.assert(response.status === 401, "response code was not 401");
+        }
+    );
+%}
+
+
+###
+### retrieve all bids from user
+###
+GET {{protocol}}{{host}}:{{port}}/users/admin/bids
+content-type: application/json
+Authorization: {{token}}
+
+> {%
+    client.test(
+        "GET /bids",
         function () {
             client.assert(response.status === 200, "response code was not 200");
         }
